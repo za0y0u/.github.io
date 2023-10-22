@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="enzh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>rsa思路总结 - 你也喜欢小狸猫吗</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="rsa思路总结 - 你也喜欢小狸猫吗" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://example.com/2023/10/21/ctf/RSA%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2023-10-21T14:29:59.000Z" />
+  
+  <meta property="og:article:author" content="za0y0u" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="10"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/MrWillCom" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/mrwillcom" target="_blank" aria-label="CodePen">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.patreon.com/MrWillCom" target="_blank" aria-label="Patreon">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@MrWillCom" target="_blank" aria-label="Mastodon">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-discord nav-item-icon" href="https://discord.gg/UKuFDjcfY8" target="_blank" aria-label="Discord">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+
+        
+        <div class="date" id="date">
+            <span>October</span>
+            <span>21,</span>
+            <span>2023</span>
+        </div>
+        
+
+        <h2 class="title">rsa思路总结</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h4 id="1、-直接分解模数N"><a href="#1、-直接分解模数N" class="headerlink" title="1、 直接分解模数N"></a>1、 直接分解模数N</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2    </span><br><span class="line"><span class="keyword">import</span> binascii    </span><br><span class="line">c = <span class="number">110674792674017748243232351185896019660434718342001686906527789876264976328686134101972125493938434992787002915562500475480693297360867681000092725583284616353543422388489208114545007138606543678040798651836027433383282177081034151589935024292017207209056829250152219183518400364871109559825679273502274955582</span>  </span><br><span class="line">n = <span class="number">135127138348299757374196447062640858416920350098320099993115949719051354213545596643216739555453946196078110834726375475981791223069451364024181952818056802089567064926510294124594174478123216516600368334763849206942942824711531334239106807454086389211139153023662266125937481669520771879355089997671125020789</span>  </span><br><span class="line">e = <span class="number">65537</span>    </span><br><span class="line">p = <span class="number">11239134987804993586763559028187245057652550219515201768644770733869088185320740938450178816138394844329723311433549899499795775655921261664087997097294813</span>  </span><br><span class="line">q = <span class="number">12022912661420941592569751731802639375088427463430162252113082619617837010913002515450223656942836378041122163833359097910935638423464006252814266959128953</span>   </span><br><span class="line"><span class="comment"># invert是求乘法逆元    </span></span><br><span class="line">d = gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))    </span><br><span class="line">jiemi = <span class="built_in">hex</span>(<span class="built_in">pow</span>(c,d,n))[<span class="number">2</span>:]    </span><br><span class="line"><span class="built_in">print</span>(binascii.unhexlify(jiemi)) </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="2、-利用公约数分解N"><a href="#2、-利用公约数分解N" class="headerlink" title="2、 利用公约数分解N"></a>2、 利用公约数分解N</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2  </span><br><span class="line">n1 = <span class="number">23220619839642624127208804329329079289273497927351564011985292026254914394833691542552890810511751239656361686073628273309390314881604580204429708461587512500636158161303419916259271078173864800267063540526943181173708108324471815782985626723198144643256432774984884880698594364583949485749575467318173034467846143380574145455195152793742611717169602237969286580028662721065495380192815175057945420182742366791661416822623915523868590710387635935179876275147056396018527260488459333051132720558953142984038635223793992651637708150494964785475065404568844039983381403909341302098773533325080910057845573898984314246089</span>  </span><br><span class="line">n2 = <span class="number">22642739016943309717184794898017950186520467348317322177556419830195164079827782890660385734113396507640392461790899249329899658620250506845740531699023854206947331021605746078358967885852989786535093914459120629747240179425838485974008209140597947135295304382318570454491064938082423309363452665886141604328435366646426917928023608108470382196753292656828513681562077468846105122812084765257799070754405638149508107463233633350462138751758913036373169668828888213323429656344812014480962916088695910177763839393954730732312224100718431146133548897031060554005592930347226526561939922660855047026581292571487960929911</span>  </span><br><span class="line">p = gmpy2.gcd(n1, n2)  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;gcd(n1, n2):n&#x27;</span>, p)  </span><br><span class="line">q1 = n1// p  </span><br><span class="line">q2 = n2// p  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;q1 is:n&#x27;</span>, q1)  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;q2 is:n&#x27;</span>, q2) </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="3、-构造平方数分解模数N"><a href="#3、-构造平方数分解模数N" class="headerlink" title="3、 构造平方数分解模数N"></a>3、 构造平方数分解模数N</h4><p>识别此类题目，通常会发现N的两个质因数p和q挨的非常近，这个时候就可以将N加一个比较小的数k，令N+k为平方数，从而解决此类题目。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">n = <span class="number">12194420073815392880989031611545296854145241675320130314821394843436947373331080911787176737202940676809674543138807024739454432089096794532016797246441325729856528664071322968428804098069997196490382286126389331179054971927655320978298979794245379000336635795490242027519669217784433367021578247340154647762800402140321022659272383087544476178802025951768015423972182045405466448431557625201012332239774962902750073900383993300146193300485117217319794356652729502100167668439007925004769118070105324664379141623816256895933959211381114172778535296409639317535751005960540737044457986793503218555306862743329296169569</span>  </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">is_square</span>(<span class="params">n</span>):  </span><br><span class="line">    low, high, ans = <span class="number">0</span>, n, -<span class="number">1</span>  </span><br><span class="line">    <span class="keyword">while</span> low &lt;= high:  </span><br><span class="line">        mid = (low + high) // <span class="number">2</span>  </span><br><span class="line">        <span class="keyword">if</span> mid * mid &lt;= n:  </span><br><span class="line">            ans = mid  </span><br><span class="line">            low = mid + <span class="number">1</span>  </span><br><span class="line">        <span class="keyword">else</span>:  </span><br><span class="line">            high = mid - <span class="number">1</span>  </span><br><span class="line">    <span class="keyword">if</span> ans**<span class="number">2</span> == n:  </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span>  </span><br><span class="line">    <span class="keyword">else</span>:  </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span>  </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):  </span><br><span class="line">    <span class="keyword">if</span> is_square(n+i**<span class="number">2</span>):  </span><br><span class="line">        <span class="built_in">print</span>(i)  </span><br><span class="line">        <span class="keyword">break</span> </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#得到k的值为716，所以可以解出pq的值，从而flag就出来了，代码如下：</span></span><br><span class="line"><span class="keyword">import</span> gmpy2    </span><br><span class="line"><span class="keyword">import</span> binascii    </span><br><span class="line">c = <span class="number">4504811333111877209539001665516391567038109992884271089537302226304395434343112574404626060854962818378560852067621253927330725244984869198505556722509058098660083054715146670767687120587049288861063202617507262871279819211231233198070574538845161629806932541832207041112786336441975087351873537350203469642198999219863581040927505152110051313011073115724502567261524181865883874517555848163026240201856207626237859665607255740790404039098444452158216907752375078054615802613066229766343714317550472079224694798552886759103668349270682843916307652213810947814618810706997339302734827571635179684652559512873381672063</span>  </span><br><span class="line">n = <span class="number">12194420073815392880989031611545296854145241675320130314821394843436947373331080911787176737202940676809674543138807024739454432089096794532016797246441325729856528664071322968428804098069997196490382286126389331179054971927655320978298979794245379000336635795490242027519669217784433367021578247340154647762800402140321022659272383087544476178802025951768015423972182045405466448431557625201012332239774962902750073900383993300146193300485117217319794356652729502100167668439007925004769118070105324664379141623816256895933959211381114172778535296409639317535751005960540737044457986793503218555306862743329296169569</span>  </span><br><span class="line">e = <span class="number">65537</span>   </span><br><span class="line">p = <span class="number">110428348144013242234907008083355974834266917027228724749730385104087025249352345946164980361082178532313669767485270254326404723948153912910688118140621712922649644396733499972695482991866293857864311557686710317462165131360819813493524457615383204504505224030129953230866877990529769205769592709254542472051</span>  </span><br><span class="line">q = <span class="number">110428348144013242234907008083355974834266917027228724749730385104087025249352345946164980361082178532313669767485270254326404723948153912910688118140621712922649644396733499972695482991866293857864311557686710317462165131360819813493524457615383204504505224030129953230866877990529769205769592709254542470619</span>  </span><br><span class="line"><span class="comment"># invert是求乘法逆元    </span></span><br><span class="line">d = gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))    </span><br><span class="line">jiemi = <span class="built_in">hex</span>(<span class="built_in">pow</span>(c,d,n))[<span class="number">2</span>:]    </span><br><span class="line"><span class="built_in">print</span>(binascii.unhexlify(jiemi)) </span><br></pre></td></tr></table></figure>
+
+<h4 id="4、-共模攻击"><a href="#4、-共模攻击" class="headerlink" title="4、 共模攻击"></a>4、 共模攻击</h4><p>共模攻击，也称同模攻击。</p>
+<p>同模攻击利用的大前提就是，RSA体系在生成密钥的过程中使用了相同的模数n。</p>
+<p>在CTF题目中，就是同一明文，同一n,不同e，进行加密。</p>
+<p>m，n相同；e，c不同，且e1 和 e2互质</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#以下为求s1，s2的python代码：</span></span><br><span class="line">e1 = <span class="number">117</span>  </span><br><span class="line">e2 = <span class="number">65537</span>  </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ext_gcd</span>(<span class="params">a, b</span>): <span class="comment">#扩展欧几里得算法      </span></span><br><span class="line">    <span class="keyword">if</span> b == <span class="number">0</span>:            </span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>, <span class="number">0</span>, a       </span><br><span class="line">    <span class="keyword">else</span>:           </span><br><span class="line">        x, y, gcd = ext_gcd(b, a % b) <span class="comment">#递归直至余数等于0(需多递归一层用来判断)          </span></span><br><span class="line">        x, y = y, (x - (a // b) * y) <span class="comment">#辗转相除法反向推导每层a、b的因子使得gcd(a,b)=ax+by成立           </span></span><br><span class="line">        <span class="keyword">return</span> x, y, gcd  </span><br><span class="line"><span class="built_in">print</span>(ext_gcd(e1,e2)) </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#得到s1=30808，s2=-55，带入上面公式，得到flag:</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> binascii  </span><br><span class="line"> </span><br><span class="line">c1 = <span class="number">12847007370626420814721007824489512747227554004777043129889885590168327306344216253180822558098466760014640870748287016523828261890262210883613336704768182861075014368378609414255982179769686582365219477657474948548886794807999952780840981021935733984348055642003116386939014004620914273840048061796063413641936754525374790951194617245627213219302958968018227701794987747717299752986500496848787979475798026065928167197152995841747840050028417539459383280735124229789952859434480746623573241061465550303008478730140898740745999035563599134667708753457211761969806278000126462918788457707098665612496454640616155477050</span>  </span><br><span class="line"> </span><br><span class="line">n = <span class="number">13060424286033164731705267935214411273739909173486948413518022752305313862238166593214772698793487761875251030423516993519714215306808677724104692474199215119387725741906071553437840256786220484582884693286140537492541093086953005486704542435188521724013251087887351409946184501295224744819621937322469140771245380081663560150133162692174498642474588168444167533621259824640599530052827878558481036155222733986179487577693360697390152370901746112653758338456083440878726007229307830037808681050302990411238666727608253452573696904083133866093791985565118032742893247076947480766837941319251901579605233916076425572961</span>  </span><br><span class="line"> </span><br><span class="line">c2 = <span class="number">6830857661703156598973433617055045803277004274287300997634648800448233655756498070693597839856021431269237565020303935757530559600152306154376778437832503465744084633164767864997303080852153757211172394903940863225981142502888126928982009493972076013486758460894416710122811249903322437742241269681934551237431668187006176418124934488775505816544733929241927900392924886649420943699356314278255683484998359663404611236056664149725644051300950988495549164517140159041907329062655574220869612072289849679613024196448446224406889484578310512232665571188351621585528255501546941332782446448144033997067917984719103068519</span>  </span><br><span class="line"> </span><br><span class="line">s1 = <span class="number">30808</span>  </span><br><span class="line"> </span><br><span class="line">s2 = -<span class="number">55</span>  </span><br><span class="line"> </span><br><span class="line">jiemi = <span class="built_in">hex</span>(<span class="built_in">pow</span>(<span class="built_in">pow</span>(c1,s1,n)*<span class="built_in">pow</span>(c2,s2,n),<span class="number">1</span>,n))[<span class="number">2</span>:]    </span><br><span class="line"> </span><br><span class="line"><span class="built_in">print</span>(binascii.unhexlify(jiemi))  </span><br></pre></td></tr></table></figure>
+
+<h4 id="5、-低指数攻击"><a href="#5、-低指数攻击" class="headerlink" title="5、 低指数攻击"></a>5、 低指数攻击</h4><p>加密指数指的是e，e一般选取65535，当e很小，可直接破解。这类攻击在CTF题中，一般是 e&#x3D;3</p>
+<p><img src="https://img-blog.csdnimg.cn/3f417e38db0e4e1f92970bf33ff1fa70.png" alt="img"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#从题目发现，e的值非常的小，为3。只要爆破k，使得kn+c 是一个立方数即可。Python代码如下：</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> gmpy2  </span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *   </span><br><span class="line"> </span><br><span class="line">n = <span class="number">0x52d483c27cd806550fbe0e37a61af2e7cf5e0efb723dfc81174c918a27627779b21fa3c851e9e94188eaee3d5cd6f752406a43fbecb53e80836ff1e185d3ccd7782ea846c2e91a7b0808986666e0bdadbfb7bdd65670a589a4d2478e9adcafe97c6ee23614bcb2ecc23580f4d2e3cc1ecfec25c50da4bc754dde6c8bfd8d1fc16956c74d8e9196046a01dc9f3024e11461c294f29d7421140732fedacac97b8fe50999117d27943c953f18c4ff4f8c258d839764078d4b6ef6e8591e0ff5563b31a39e6374d0d41c8c46921c25e5904a817ef8e39e5c9b71225a83269693e0b7e3218fc5e5a1e8412ba16e588b3d6ac536dce39fcdfce81eec79979ea6872793</span>  </span><br><span class="line"> </span><br><span class="line">e = <span class="number">3</span>  </span><br><span class="line"> </span><br><span class="line">c = <span class="number">0x10652cdfaa6b63f6d7bd1109da08181e500e5643f5b240a9024bfa84d5f2cac9310562978347bb232d63e7289283871efab83d84ff5a7b64a94a79d34cfbd4ef121723ba1f663e514f83f6f01492b4e13e1bb4296d96ea5a353d3bf2edd2f449c03c4a3e995237985a596908adc741f32365</span>  </span><br><span class="line"> </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">de</span>(<span class="params">c, e, n</span>):  </span><br><span class="line"> </span><br><span class="line">    k = <span class="number">0</span>  </span><br><span class="line"> </span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:  </span><br><span class="line"> </span><br><span class="line">        m = c + n*k  </span><br><span class="line"> </span><br><span class="line">        result, flag = gmpy2.iroot(m, e)  </span><br><span class="line"> </span><br><span class="line">        <span class="keyword">if</span> <span class="literal">True</span> == flag:  </span><br><span class="line"> </span><br><span class="line">            <span class="keyword">return</span> result  </span><br><span class="line"> </span><br><span class="line">        k += <span class="number">1</span>  </span><br><span class="line"> </span><br><span class="line">m = de(c,e,n)  </span><br><span class="line"> </span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(m)) </span><br></pre></td></tr></table></figure>
+
+<h4 id="6、-低指数广播攻击"><a href="#6、-低指数广播攻击" class="headerlink" title="6、 低指数广播攻击"></a>6、 低指数广播攻击</h4><p>如果选取的加密指数较低，并且使用了相同的加密指数给一个接受者的群发送相同的信息，那么可以进行广播攻击得到明文。</p>
+<p>在CTF中，n、c不同，明文m，e相同，其e比较小。使用中国剩余定理求解。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2  </span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> sympy  </span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> reduce  </span><br><span class="line"> </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">chinese_remainder</span>(<span class="params">n, a</span>):  </span><br><span class="line"> </span><br><span class="line">    <span class="built_in">sum</span> = <span class="number">0</span>  </span><br><span class="line"> </span><br><span class="line">    prod = reduce(<span class="keyword">lambda</span> a, b: a * b, n)  </span><br><span class="line"> </span><br><span class="line">   </span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span> n_i, a_i <span class="keyword">in</span> <span class="built_in">zip</span>(n, a):  </span><br><span class="line"> </span><br><span class="line">        p = prod // n_i  </span><br><span class="line"> </span><br><span class="line">        <span class="built_in">sum</span> += a_i * sympy.invert(p, n_i) * p  </span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">int</span>(<span class="built_in">sum</span> % prod)  </span><br><span class="line"> </span><br><span class="line">ns=[<span class="number">15863230586500684911356384742123404120213699052018048588650392009927565369685497256344682150189923131009586323640507773706997704860898682946308031020361302334248895233255911348365179153799197341744863134926804603973507415697810440916305092395180382239729550833607847524005391137474497849077097574452115379368463540087172800902210822143687014813631366360652583216269138116785489485772437870528892032119729929607857459621078790511144060710035933887337208301078892163837203412081114510143406013892393607932596921308889058909544584619676380766485493114814753878272881866907210235681877689493671668534251778397658670518117</span>, <span class="number">14144098469438619358682652828507744381697293556670717685553585719665002440476256008471235313826051740009083510860714991201047915737216102220242621674841600987122005914542061963618272275986835928673920375768272390912778741502655909281390948606467847118377641357547931472588836726339758576038273820470879637555458446243401248151675266602656677360819563744765522495640821496694918515669243614141704744848980746101569785439728585144841655665959389460512628800782742764147773150430552859331269667626942993392101897661719871375721143240270211821269260950380944670195863016621594387236339317938305273510719419578308449465183</span>, <span class="number">27563822879593503938377821960427219022565215631856333510782568496016547757945464794632272818101891677705256471714805217606503652132995136255720639088424576003650628211271025648183600635145895528466199068640094470078526413324708028578289949241288828542143203769199399500669311878391255837977932634772778594526940501234736059441483897017015324765266787399950699732518347518591167932031031320265136158304460199654008895095274754918153773566824931440342525688741289235153882699461549523425169846266597156773535163599640189457171272058311480951820887261040891344076039474315985825984444520336790670313179493074014037981261</span>]  </span><br><span class="line"> </span><br><span class="line">cs=[<span class="number">3833095607830862948079097323254872789586576953317671099752083261949616608759231291050566542764984974722790226120399722937104503590740358249900089784508490830379531632752169777949200718567033018577184658177019404903817920024468923715441355404672443007723525750768430895425376124679225715687382380114628103058312176343693900115638265002657622618744666247132114654135429040069316368839938881716554901593031901272992940200484460436193699175500376368456706998564064693820008778900344357745691652875500810447147088715289581351501876012044611990972521570253106671158207677490849249612002954497927762168699886110455354481924</span>, <span class="number">1502420121177211156091634258259634977709023894278792755694473756163084431123774101512866316989917922052023168401167212284219907272528117024670443698990238243030221117004372456475521502350404137469088570170885409265567084376069256924135270283335242133163303599239181417949980292944203204296598188175632723968779672994090788585343302473442389865459398142634104331743517384589200789331489394375604801951994831647339839112698394141328178967516636452592385248135340133712522135715943787590172334743893259621909532456281362868290556461907936774231166936915669816509378419892149164552548131776979706381641477878931403040942</span>, <span class="number">8992204063713908492214256291861339175525948946919629972908439132005643626148678347198381531633907182877152728077958345519083406637446972079387161726967295886447791613166577391233866583354793842121902234644830640050181130381996083089350911224037154798259291124104894554037604500881250119806371348673833105103600782286898276354573884788251542211434143476774391457587885772379990104835187104619922442613860682792470389490804228050671124495925536024571104944112397143299499508504917890140939438891891453283594000764399193028606955089853654071198909973555844004685149713774167524224100487937899126480545681565581673958854</span>]  </span><br><span class="line"> </span><br><span class="line">res = chinese_remainder(ns,cs)  </span><br><span class="line"> </span><br><span class="line"><span class="built_in">print</span>(gmpy2.iroot(res,<span class="number">89</span>))  </span><br><span class="line"> </span><br><span class="line">得到E2 = <span class="number">561236991551738188085</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="7、-拆解e转化"><a href="#7、-拆解e转化" class="headerlink" title="7、 拆解e转化"></a>7、 拆解e转化</h4><p>正常的RSA应该有e与φ(n)互素,但是有的题目并不满足，但通常会给两组关于e与φ(n)的等式。这个时候就需要将e进行质因数分解，构造出新的RSA求解。</p>
+<h4 id="8、-多素数分解"><a href="#8、-多素数分解" class="headerlink" title="8、 多素数分解"></a>8、 多素数分解</h4><p>这类题目的n并不是两个大素数相乘，往往是多个素数的乘积，但解法是类似的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2    </span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> binascii    </span><br><span class="line"> </span><br><span class="line">c = <span class="number">144009221781172353636339988896910912047726260759108847257566019412382083853598735817869933202168</span>  </span><br><span class="line"> </span><br><span class="line">n = <span class="number">175797137276517400024170861198192089021253920489351812147043687817076482376379806063372376015921</span>  </span><br><span class="line"> </span><br><span class="line">E = <span class="number">0x10001</span>  </span><br><span class="line"> </span><br><span class="line">data=[<span class="number">9401433281508038261</span>,<span class="number">10252499084912054759</span>,<span class="number">11215197893925590897</span>,<span class="number">11855687732085186571</span>,<span class="number">13716847112310466417</span>]  </span><br><span class="line"> </span><br><span class="line">phi = <span class="number">1</span>  </span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> data:  </span><br><span class="line"> </span><br><span class="line">    phi = phi * (p-<span class="number">1</span>)  </span><br><span class="line"> </span><br><span class="line"><span class="comment"># invert是求乘法逆元    </span></span><br><span class="line"> </span><br><span class="line">d = gmpy2.invert(E,phi)   </span><br><span class="line"> </span><br><span class="line">jiemi = <span class="built_in">hex</span>(<span class="built_in">pow</span>(c,d,n))[<span class="number">2</span>:]    </span><br><span class="line"> </span><br><span class="line"><span class="built_in">print</span>(binascii.unhexlify(jiemi)) </span><br></pre></td></tr></table></figure>
+
+<h4 id="Rabin加密算法"><a href="#Rabin加密算法" class="headerlink" title="Rabin加密算法"></a>Rabin加密算法</h4>
+    </div>
+
+    
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by za0y0u, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+        </div>
+        
+    </div>
+    
+
+    <div class="container post-prev-next">
+        
+        <a href="/2023/10/21/ctf/RCE%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">RCE思路总结</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/2023/10/21/ctf/xss%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">xss思路总结</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h2 class="title">Blog</h2>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/tags" class="item">Tags</a>
+                
+                <a href="/categories" class="item">Categories</a>
+                
+                <a href="/search" class="item">Search</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/resume" class="item">Resume</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Projects</h2>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Me</h2>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://codepen.io/mrwillcom" class="item">CodePen</a>
+                
+                <a target="_blank" rel="noopener" href="https://www.patreon.com/MrWillCom" class="item">Patreon</a>
+                
+                <a target="_blank" rel="noopener" href="https://noc.social/@MrWillCom" class="item">Mastodon</a>
+                
+                <a target="_blank" rel="noopener" href="https://discord.gg/UKuFDjcfY8" class="item">Discord</a>
+                
+                <a href="mailto:mr.will.com@outlook.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2023 za0y0u<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>
