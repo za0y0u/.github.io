@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   
-  <title>你也喜欢小狸猫吗</title>
+  <title>rsa思路总结 - 你也喜欢小狸猫吗</title>
   
     <link rel="shortcut icon" href="/favicon.png">
   
@@ -16,15 +16,15 @@
   
   
   
-  <meta property="og:title" content="你也喜欢小狸猫吗" />
+  <meta property="og:title" content="rsa思路总结 - 你也喜欢小狸猫吗" />
   
   <meta property="og:type" content="article" />
   
-  <meta property="og:url" content="http://example.com/2023/10/16/RSA%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/index.html" />
+  <meta property="og:url" content="http://example.com/2023/10/21/ctf/RSA%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/index.html" />
   
   <meta property="og:image" content="/favicon.png" />
   
-  <meta property="og:article:published_time" content="2023-10-16T11:47:52.455Z" />
+  <meta property="og:article:published_time" content="2023-10-21T14:29:59.000Z" />
   
   <meta property="og:article:author" content="za0y0u" />
   
@@ -155,20 +155,18 @@
         
         <div class="date" id="date">
             <span>October</span>
-            <span>16,</span>
+            <span>21,</span>
             <span>2023</span>
         </div>
         
 
-        <h2 class="title"></h2>
+        <h2 class="title">rsa思路总结</h2>
     </div>
 
     <div class="divider"></div>
 
     <div class="content">
-        <p>title: rsa思路总结<br>date: 2023-10-21 22:29:59<br>tags:</p>
-<h1 id="RSA题型总结"><a href="#RSA题型总结" class="headerlink" title="RSA题型总结"></a>RSA题型总结</h1><p>[TOC]</p>
-<h4 id="1、-直接分解模数N"><a href="#1、-直接分解模数N" class="headerlink" title="1、 直接分解模数N"></a>1、 直接分解模数N</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2    </span><br><span class="line"><span class="keyword">import</span> binascii    </span><br><span class="line">c = <span class="number">110674792674017748243232351185896019660434718342001686906527789876264976328686134101972125493938434992787002915562500475480693297360867681000092725583284616353543422388489208114545007138606543678040798651836027433383282177081034151589935024292017207209056829250152219183518400364871109559825679273502274955582</span>  </span><br><span class="line">n = <span class="number">135127138348299757374196447062640858416920350098320099993115949719051354213545596643216739555453946196078110834726375475981791223069451364024181952818056802089567064926510294124594174478123216516600368334763849206942942824711531334239106807454086389211139153023662266125937481669520771879355089997671125020789</span>  </span><br><span class="line">e = <span class="number">65537</span>    </span><br><span class="line">p = <span class="number">11239134987804993586763559028187245057652550219515201768644770733869088185320740938450178816138394844329723311433549899499795775655921261664087997097294813</span>  </span><br><span class="line">q = <span class="number">12022912661420941592569751731802639375088427463430162252113082619617837010913002515450223656942836378041122163833359097910935638423464006252814266959128953</span>   </span><br><span class="line"><span class="comment"># invert是求乘法逆元    </span></span><br><span class="line">d = gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))    </span><br><span class="line">jiemi = <span class="built_in">hex</span>(<span class="built_in">pow</span>(c,d,n))[<span class="number">2</span>:]    </span><br><span class="line"><span class="built_in">print</span>(binascii.unhexlify(jiemi)) </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+        <h1 id="RSA题型总结"><a href="#RSA题型总结" class="headerlink" title="RSA题型总结"></a>RSA题型总结</h1><h4 id="1、-直接分解模数N"><a href="#1、-直接分解模数N" class="headerlink" title="1、 直接分解模数N"></a>1、 直接分解模数N</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2    </span><br><span class="line"><span class="keyword">import</span> binascii    </span><br><span class="line">c = <span class="number">110674792674017748243232351185896019660434718342001686906527789876264976328686134101972125493938434992787002915562500475480693297360867681000092725583284616353543422388489208114545007138606543678040798651836027433383282177081034151589935024292017207209056829250152219183518400364871109559825679273502274955582</span>  </span><br><span class="line">n = <span class="number">135127138348299757374196447062640858416920350098320099993115949719051354213545596643216739555453946196078110834726375475981791223069451364024181952818056802089567064926510294124594174478123216516600368334763849206942942824711531334239106807454086389211139153023662266125937481669520771879355089997671125020789</span>  </span><br><span class="line">e = <span class="number">65537</span>    </span><br><span class="line">p = <span class="number">11239134987804993586763559028187245057652550219515201768644770733869088185320740938450178816138394844329723311433549899499795775655921261664087997097294813</span>  </span><br><span class="line">q = <span class="number">12022912661420941592569751731802639375088427463430162252113082619617837010913002515450223656942836378041122163833359097910935638423464006252814266959128953</span>   </span><br><span class="line"><span class="comment"># invert是求乘法逆元    </span></span><br><span class="line">d = gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))    </span><br><span class="line">jiemi = <span class="built_in">hex</span>(<span class="built_in">pow</span>(c,d,n))[<span class="number">2</span>:]    </span><br><span class="line"><span class="built_in">print</span>(binascii.unhexlify(jiemi)) </span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h4 id="2、-利用公约数分解N"><a href="#2、-利用公约数分解N" class="headerlink" title="2、 利用公约数分解N"></a>2、 利用公约数分解N</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2  </span><br><span class="line">n1 = <span class="number">23220619839642624127208804329329079289273497927351564011985292026254914394833691542552890810511751239656361686073628273309390314881604580204429708461587512500636158161303419916259271078173864800267063540526943181173708108324471815782985626723198144643256432774984884880698594364583949485749575467318173034467846143380574145455195152793742611717169602237969286580028662721065495380192815175057945420182742366791661416822623915523868590710387635935179876275147056396018527260488459333051132720558953142984038635223793992651637708150494964785475065404568844039983381403909341302098773533325080910057845573898984314246089</span>  </span><br><span class="line">n2 = <span class="number">22642739016943309717184794898017950186520467348317322177556419830195164079827782890660385734113396507640392461790899249329899658620250506845740531699023854206947331021605746078358967885852989786535093914459120629747240179425838485974008209140597947135295304382318570454491064938082423309363452665886141604328435366646426917928023608108470382196753292656828513681562077468846105122812084765257799070754405638149508107463233633350462138751758913036373169668828888213323429656344812014480962916088695910177763839393954730732312224100718431146133548897031060554005592930347226526561939922660855047026581292571487960929911</span>  </span><br><span class="line">p = gmpy2.gcd(n1, n2)  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;gcd(n1, n2):n&#x27;</span>, p)  </span><br><span class="line">q1 = n1// p  </span><br><span class="line">q2 = n2// p  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;q1 is:n&#x27;</span>, q1)  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;q2 is:n&#x27;</span>, q2) </span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -212,16 +210,25 @@
 
     <div class="container post-prev-next">
         
-        <a href="/2023/10/16/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" class="next">
+        <a href="/2023/10/21/ctf/xss%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" class="next">
             <div>
                 <div class="text">
                     <p class="label">Next</p>
-                    <h3 class="title"></h3>
+                    <h3 class="title">xss思路总结</h3>
                 </div>
             </div>
         </a>
         
-        <a class="prev"></a>
+        
+        <a href="/2023/10/21/ctf/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">文件上传思路总结</>
+                </div>
+            </div>
+        </a>
+        
     </div>
 
     
