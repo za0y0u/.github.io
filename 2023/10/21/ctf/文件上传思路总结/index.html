@@ -166,24 +166,30 @@
     <div class="divider"></div>
 
     <div class="content">
-        <h4 id="前端验证"><a href="#前端验证" class="headerlink" title="前端验证"></a>前端验证</h4><p>上传文件的时候还没有抓取到数据包</p>
+        <!-- toc -->
+
+
+
+<!-- tocstop -->
+
+<h4><span id="前端验证">前端验证</span></h4><p>上传文件的时候还没有抓取到数据包</p>
 <p>禁用js</p>
-<h4 id="MIME-类型校验"><a href="#MIME-类型校验" class="headerlink" title="MIME 类型校验"></a>MIME 类型校验</h4><p>抓取上传的数据包然后直接修改 <code>Content-Type</code>类型为：<code>image/png</code>等合法的类型</p>
-<h4 id="文件头"><a href="#文件头" class="headerlink" title="文件头"></a>文件头</h4><p>（图片马，可绕）</p>
-<h4 id="黑名单"><a href="#黑名单" class="headerlink" title="黑名单"></a>黑名单</h4><h6 id="替换为空"><a href="#替换为空" class="headerlink" title="替换为空"></a>替换为空</h6><p>双写绕过</p>
-<h6 id="大小写绕过"><a href="#大小写绕过" class="headerlink" title="大小写绕过"></a>大小写绕过</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">条件：</span><br><span class="line">Windows环境</span><br></pre></td></tr></table></figure>
+<h4><span id="mime-类型校验">MIME 类型校验</span></h4><p>抓取上传的数据包然后直接修改 <code>Content-Type</code>类型为：<code>image/png</code>等合法的类型</p>
+<h4><span id="文件头">文件头</span></h4><p>（图片马，可绕）</p>
+<h4><span id="黑名单">黑名单</span></h4><h6><span id="替换为空">替换为空</span></h6><p>双写绕过</p>
+<h6><span id="大小写绕过">大小写绕过</span></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">条件：</span><br><span class="line">Windows环境</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strtolower($file_ext) #转换为小写</span><br></pre></td></tr></table></figure>
 
-<h6 id="特殊后缀——上传PHP文件的别名"><a href="#特殊后缀——上传PHP文件的别名" class="headerlink" title="特殊后缀——上传PHP文件的别名"></a>特殊后缀——上传PHP文件的别名</h6><h6 id="htaccess-文件"><a href="#htaccess-文件" class="headerlink" title="htaccess 文件"></a>htaccess 文件</h6><h6 id="加点，加空格，加-DATA"><a href="#加点，加空格，加-DATA" class="headerlink" title="加点，加空格，加::$DATA"></a>加点，加空格，加::$DATA</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">::$DATA条件：</span><br><span class="line">Windows特性，自动去掉点，空格，::$DATA</span><br></pre></td></tr></table></figure>
+<h6><span id="特殊后缀上传php文件的别名">特殊后缀——上传PHP文件的别名</span></h6><h6><span id="htaccess-文件">htaccess 文件</span></h6><h6><span id="加点加空格加data">加点，加空格，加::$DATA</span></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">::$DATA条件：</span><br><span class="line">Windows特性，自动去掉点，空格，::$DATA</span><br></pre></td></tr></table></figure>
 
-<h4 id="00截断"><a href="#00截断" class="headerlink" title="00截断"></a>00截断</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">条件：</span><br><span class="line">php版本&lt;5.3.4</span><br><span class="line">并且magic_quotes_gpc关闭</span><br></pre></td></tr></table></figure>
+<h4><span id="00截断">00截断</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">条件：</span><br><span class="line">php版本&lt;5.3.4</span><br><span class="line">并且magic_quotes_gpc关闭</span><br></pre></td></tr></table></figure>
 
 <p>get：路径信息，会进行url编码</p>
 <p>post：抓包吧，需要在 BP 里面写一个 %00 然后再 URL 手动解码</p>
-<h4 id="图片马"><a href="#图片马" class="headerlink" title="图片马"></a>图片马</h4><h4 id="条件竞争"><a href="#条件竞争" class="headerlink" title="条件竞争"></a>条件竞争</h4><h4 id="move-uploaded-file-缺陷"><a href="#move-uploaded-file-缺陷" class="headerlink" title="move_uploaded_file 缺陷"></a>move_uploaded_file 缺陷</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">move_uploaded_file($temp_file, $img_path)</span><br><span class="line">当 $img_path可控的时候，还会忽略掉 $img_path后面的 /.</span><br></pre></td></tr></table></figure>
+<h4><span id="图片马">图片马</span></h4><h4><span id="条件竞争">条件竞争</span></h4><h4><span id="move_uploaded_file-缺陷">move_uploaded_file 缺陷</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">move_uploaded_file($temp_file, $img_path)</span><br><span class="line">当 $img_path可控的时候，还会忽略掉 $img_path后面的 /.</span><br></pre></td></tr></table></figure>
 
-<h4 id="二次渲染"><a href="#二次渲染" class="headerlink" title="二次渲染"></a>二次渲染</h4><p><code>imagecreatefrom</code>系列渲染图片都可能被绕过，有些特殊的图马是可以逃避过渲染的</p>
+<h4><span id="二次渲染">二次渲染</span></h4><p><code>imagecreatefrom</code>系列渲染图片都可能被绕过，有些特殊的图马是可以逃避过渲染的</p>
 
     </div>
 
@@ -193,12 +199,6 @@
         <div class="details">
             <p>This post is written by za0y0u, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
         </div>
-        
-        <p class="tags">
-            
-            <i class="icon"></i>
-            <a href="/tags/前端验证/" class="tag">#前端验证</a><a href="/tags/MIME-类型校验/" class="tag">#MIME 类型校验</a><a href="/tags/文件头/" class="tag">#文件头</a><a href="/tags/黑名单/" class="tag">#黑名单</a><a href="/tags/00截断/" class="tag">#00截断</a><a href="/tags/图片马/" class="tag">#图片马</a><a href="/tags/条件竞争/" class="tag">#条件竞争</a><a href="/tags/move-uploaded-file-缺陷/" class="tag">#move_uploaded_file 缺陷</a><a href="/tags/二次渲染/" class="tag">#二次渲染</a>
-        </p>
         
     </div>
     
