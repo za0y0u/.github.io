@@ -168,28 +168,44 @@
     <div class="content">
         <!-- toc -->
 
-
-
+<ul>
+<li><a href="#%E5%89%8D%E7%AB%AF%E9%AA%8C%E8%AF%81">前端验证</a></li>
+<li><a href="#mime-%E7%B1%BB%E5%9E%8B%E6%A0%A1%E9%AA%8C">MIME 类型校验</a></li>
+<li><a href="#%E6%96%87%E4%BB%B6%E5%A4%B4">文件头</a></li>
+<li><a href="#%E9%BB%91%E5%90%8D%E5%8D%95">黑名单</a><ul>
+<li><a href="#%E6%9B%BF%E6%8D%A2%E4%B8%BA%E7%A9%BA">替换为空</a></li>
+<li><a href="#%E5%A4%A7%E5%B0%8F%E5%86%99%E7%BB%95%E8%BF%87">大小写绕过</a></li>
+<li><a href="#%E7%89%B9%E6%AE%8A%E5%90%8E%E7%BC%80%E4%B8%8A%E4%BC%A0php%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%AB%E5%90%8D">特殊后缀——上传PHP文件的别名</a></li>
+<li><a href="#htaccess-%E6%96%87%E4%BB%B6">htaccess 文件</a></li>
+<li><a href="#%E5%8A%A0%E7%82%B9%E5%8A%A0%E7%A9%BA%E6%A0%BC%E5%8A%A0data">加点，加空格，加::$DATA</a></li>
+</ul>
+</li>
+<li><a href="#00%E6%88%AA%E6%96%AD">00截断</a></li>
+<li><a href="#%E5%9B%BE%E7%89%87%E9%A9%AC">图片马</a></li>
+<li><a href="#%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89">条件竞争</a></li>
+<li><a href="#move_uploaded_file-%E7%BC%BA%E9%99%B7">move_uploaded_file 缺陷</a></li>
+<li><a href="#%E4%BA%8C%E6%AC%A1%E6%B8%B2%E6%9F%93">二次渲染</a></li>
+</ul>
 <!-- tocstop -->
 
-<h4><span id="前端验证">前端验证</span></h4><p>上传文件的时候还没有抓取到数据包</p>
+<h2><span id="前端验证">前端验证</span></h2><p>上传文件的时候还没有抓取到数据包</p>
 <p>禁用js</p>
-<h4><span id="mime-类型校验">MIME 类型校验</span></h4><p>抓取上传的数据包然后直接修改 <code>Content-Type</code>类型为：<code>image/png</code>等合法的类型</p>
-<h4><span id="文件头">文件头</span></h4><p>（图片马，可绕）</p>
-<h4><span id="黑名单">黑名单</span></h4><h6><span id="替换为空">替换为空</span></h6><p>双写绕过</p>
-<h6><span id="大小写绕过">大小写绕过</span></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">条件：</span><br><span class="line">Windows环境</span><br></pre></td></tr></table></figure>
+<h2><span id="mime-类型校验">MIME 类型校验</span></h2><p>抓取上传的数据包然后直接修改 <code>Content-Type</code>类型为：<code>image/png</code>等合法的类型</p>
+<h2><span id="文件头">文件头</span></h2><p>（图片马，可绕）</p>
+<h2><span id="黑名单">黑名单</span></h2><h3><span id="替换为空">替换为空</span></h3><p>双写绕过</p>
+<h3><span id="大小写绕过">大小写绕过</span></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">条件：</span><br><span class="line">Windows环境</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strtolower($file_ext) #转换为小写</span><br></pre></td></tr></table></figure>
 
-<h6><span id="特殊后缀上传php文件的别名">特殊后缀——上传PHP文件的别名</span></h6><h6><span id="htaccess-文件">htaccess 文件</span></h6><h6><span id="加点加空格加data">加点，加空格，加::$DATA</span></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">::$DATA条件：</span><br><span class="line">Windows特性，自动去掉点，空格，::$DATA</span><br></pre></td></tr></table></figure>
+<h3><span id="特殊后缀上传php文件的别名">特殊后缀——上传PHP文件的别名</span></h3><h3><span id="htaccess-文件">htaccess 文件</span></h3><h3><span id="加点加空格加data">加点，加空格，加::$DATA</span></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">::$DATA条件：</span><br><span class="line">Windows特性，自动去掉点，空格，::$DATA</span><br></pre></td></tr></table></figure>
 
-<h4><span id="00截断">00截断</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">条件：</span><br><span class="line">php版本&lt;5.3.4</span><br><span class="line">并且magic_quotes_gpc关闭</span><br></pre></td></tr></table></figure>
+<h2><span id="00截断">00截断</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">条件：</span><br><span class="line">php版本&lt;5.3.4</span><br><span class="line">并且magic_quotes_gpc关闭</span><br></pre></td></tr></table></figure>
 
 <p>get：路径信息，会进行url编码</p>
 <p>post：抓包吧，需要在 BP 里面写一个 %00 然后再 URL 手动解码</p>
-<h4><span id="图片马">图片马</span></h4><h4><span id="条件竞争">条件竞争</span></h4><h4><span id="move_uploaded_file-缺陷">move_uploaded_file 缺陷</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">move_uploaded_file($temp_file, $img_path)</span><br><span class="line">当 $img_path可控的时候，还会忽略掉 $img_path后面的 /.</span><br></pre></td></tr></table></figure>
+<h2><span id="图片马">图片马</span></h2><h2><span id="条件竞争">条件竞争</span></h2><h2><span id="move_uploaded_file-缺陷">move_uploaded_file 缺陷</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">move_uploaded_file($temp_file, $img_path)</span><br><span class="line">当 $img_path可控的时候，还会忽略掉 $img_path后面的 /.</span><br></pre></td></tr></table></figure>
 
-<h4><span id="二次渲染">二次渲染</span></h4><p><code>imagecreatefrom</code>系列渲染图片都可能被绕过，有些特殊的图马是可以逃避过渲染的</p>
+<h2><span id="二次渲染">二次渲染</span></h2><p><code>imagecreatefrom</code>系列渲染图片都可能被绕过，有些特殊的图马是可以逃避过渲染的</p>
 
     </div>
 
