@@ -1,171 +1,203 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head prefix="og: https://ogp.me/ns#">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
-  
-  <title>rsa思路总结 - 你也喜欢小狸猫吗</title>
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-    <link rel='manifest' href='/manifest.json'>
-  
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-  
-  
-  
-  <meta property="og:title" content="rsa思路总结 - 你也喜欢小狸猫吗" />
-  
-  <meta property="og:type" content="article" />
-  
-  <meta property="og:url" content="https://za0y0u.github.io/2023/10/21/ctf/RSA%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/index.html" />
-  
-  <meta property="og:image" content="/favicon.png" />
-  
-  <meta property="og:article:published_time" content="2023-10-21T14:29:59.000Z" />
-  
-  <meta property="og:article:author" content="za0y0u" />
-  
-  
-
-  
-<link rel="stylesheet" href="/css/var.css">
-
-  
 <link rel="stylesheet" href="/css/main.css">
 
-  
-<link rel="stylesheet" href="/css/typography.css">
 
-  
-<link rel="stylesheet" href="/css/code-highlighting.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
-  
-<link rel="stylesheet" href="/css/components.css">
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"za0y0u.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
 
-  
-<link rel="stylesheet" href="/css/nav.css">
+  <meta name="description" content="12345678910111213#已知p,q,c,e脚本import gmpy2 as gpimport binasciip &#x3D;  gp.mpz(863763376725700856709965348654109117132049150943361544753916243791124417588566780639841179052408355344515811350222774520620532">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rsa思路总结">
+<meta property="og:url" content="https://za0y0u.github.io/2023/10/21/ctf/RSA%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="你也喜欢小狸猫吗">
+<meta property="og:description" content="12345678910111213#已知p,q,c,e脚本import gmpy2 as gpimport binasciip &#x3D;  gp.mpz(863763376725700856709965348654109117132049150943361544753916243791124417588566780639841179052408355344515811350222774520620532">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/3f417e38db0e4e1f92970bf33ff1fa70.png">
+<meta property="article:published_time" content="2023-10-21T14:29:59.000Z">
+<meta property="article:modified_time" content="2023-10-23T12:49:00.271Z">
+<meta property="article:author" content="za0y0u">
+<meta property="article:tag" content="za0y0u">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/3f417e38db0e4e1f92970bf33ff1fa70.png">
 
-  
-<link rel="stylesheet" href="/css/paginator.css">
+<link rel="canonical" href="https://za0y0u.github.io/2023/10/21/ctf/RSA%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/">
 
-  
-<link rel="stylesheet" href="/css/footer.css">
 
-  
-<link rel="stylesheet" href="/css/post-list.css">
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
 
-  
-  
-<link rel="stylesheet" href="/css/rainbow-banner.css">
-
-  
-  
-  
-<link rel="stylesheet" href="/css/toc.css">
-
-  
-  
-  
-  
-  
-<link rel="stylesheet" href="/css/post.css">
-
-  
-  
-  
-  
+  <title>rsa思路总结 | 你也喜欢小狸猫吗</title>
   
 
-  
-<meta name="generator" content="Hexo 6.3.0"></head>
-    <body
-        data-color-scheme="auto"
-        data-uppercase-categories="true"
-        
-        data-rainbow-banner="true"
-        data-rainbow-banner-shown="auto"
-        data-rainbow-banner-month="10"
-        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
-        
-        data-config-root="/"
-        
-        data-toc="true"
-        data-toc-max-depth="2"
-        
-        
-    >
-        <nav id="theme-nav">
-    <div class="inner">
-        <a class="title" href="/">Blog</a>
-        <div class="nav-arrow"></div>
-        <div class="nav-items">
-            <a class="nav-item nav-item-home" href="/">Home</a>
-            
-            
-            <a class="nav-item" href="/archives">Archives</a>
-            
-            
-            
-            <a class="nav-item" href="/friends">Friends</a>
-            
-            
-            
-            <a class="nav-item" href="/projects">Projects</a>
-            
-            
-            
-            <a class="nav-item" href="/about">About</a>
-            
-            
-            
-            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/MrWillCom" target="_blank" aria-label="GitHub">&nbsp;</a>
-            
-            
-            
-            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/mrwillcom" target="_blank" aria-label="CodePen">&nbsp;</a>
-            
-            
-            
-            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.patreon.com/MrWillCom" target="_blank" aria-label="Patreon">&nbsp;</a>
-            
-            
-            
-            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@MrWillCom" target="_blank" aria-label="Mastodon">&nbsp;</a>
-            
-            
-            
-            <a class="nav-item nav-item-discord nav-item-icon" href="https://discord.gg/UKuFDjcfY8" target="_blank" aria-label="Discord">&nbsp;</a>
-            
-            
-            
-            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
-            
-            
-        </div>
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">你也喜欢小狸猫吗</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">za0y0u_早柚_小狸猫(:</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
 </nav>
-        
-<article class="post">
-    <div class="meta">
-        
 
-        
-        <div class="date" id="date">
-            <span>October</span>
-            <span>21,</span>
-            <span>2023</span>
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://za0y0u.github.io/2023/10/21/ctf/RSA%E9%A2%98%E5%9E%8B%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="za0y0u">
+      <meta itemprop="description" content="工作还不如睡觉">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你也喜欢小狸猫吗">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          rsa思路总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-10-21 22:29:59" itemprop="dateCreated datePublished" datetime="2023-10-21T22:29:59+08:00">2023-10-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-23 20:49:00" itemprop="dateModified" datetime="2023-10-23T20:49:00+08:00">2023-10-23</time>
+              </span>
+
+          
+
         </div>
-        
+      </header>
 
-        <h2 class="title">rsa思路总结</h2>
-    </div>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
-    <div class="divider"></div>
-
-    <div class="content">
+      
         <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#已知p,q,c,e脚本</span></span><br><span class="line"><span class="keyword">import</span> gmpy2 <span class="keyword">as</span> gp</span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line">p =  gp.mpz(<span class="number">8637633767257008567099653486541091171320491509433615447539162437911244175885667806398411790524083553445158113502227745206205327690939504032994699902053229</span>)</span><br><span class="line">q =  gp.mpz(<span class="number">11874843837980297032092405848653656852760910154543380907650040190704283358909208578251063047732443992230647903887510065547947313543299303261986053486569407</span>)</span><br><span class="line">e =  gp.mpz(<span class="number">65537</span>)</span><br><span class="line">c =  gp.mpz(<span class="number">90362297576572826064831133206230135349790392078780406000643496612200873754835039374184323808342127071833274981191134125413478105835272238356352724573228797863805124195170088819735610736936895478614898105848968069280022022112207095140266709372221090586917729998024205978412679448008696923580889787529663283314</span>)</span><br><span class="line">n = p*q</span><br><span class="line">phi = (p-<span class="number">1</span>) * (q-<span class="number">1</span>)</span><br><span class="line">d = gp.invert(e, phi)</span><br><span class="line">m = <span class="built_in">pow</span>(c, d, n)</span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#已知e，n,dp,c脚本</span></span><br><span class="line"><span class="keyword">import</span> gmpy2 <span class="keyword">as</span> gp</span><br><span class="line">e = </span><br><span class="line">n = </span><br><span class="line">dp= </span><br><span class="line">c = </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, e):</span><br><span class="line">    <span class="keyword">if</span> (dp * e - <span class="number">1</span>) % i == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">if</span> n % (((dp * e - <span class="number">1</span>) // i) + <span class="number">1</span>) == <span class="number">0</span>:</span><br><span class="line">            p = ((dp * e - <span class="number">1</span>) // i) + <span class="number">1</span></span><br><span class="line">            q = n // (((dp * e - <span class="number">1</span>) // i) + <span class="number">1</span>)</span><br><span class="line">            phi = (q - <span class="number">1</span>) * (p - <span class="number">1</span>)</span><br><span class="line">            d = gp.invert(e, phi)</span><br><span class="line">            m = <span class="built_in">pow</span>(c, d, n)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(m)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">bytes</span>.fromhex(<span class="built_in">hex</span>(m)[<span class="number">2</span>:]))</span><br></pre></td></tr></table></figure>
@@ -205,143 +237,183 @@
     </div>
 
     
-    <div class="about">
-        <h1>About this Post</h1>
-        <div class="details">
-            <p>This post is written by za0y0u, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/10/21/ctf/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" rel="prev" title="文件上传思路总结">
+      <i class="fa fa-chevron-left"></i> 文件上传思路总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/10/21/ctf/xss%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" rel="next" title="xss思路总结">
+      xss思路总结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
         </div>
-        
-    </div>
-    
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
 
-    <div class="container post-prev-next">
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">1、 直接分解模数N</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">2、 利用公约数分解N</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">3、 构造平方数分解模数N</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">4、 共模攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">5、 低指数攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">6、 低指数广播攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">7、 拆解e转化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">8.</span> <span class="nav-text">8、 多素数分解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">9.</span> <span class="nav-text">Rabin加密算法</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">za0y0u</p>
+  <div class="site-description" itemprop="description">工作还不如睡觉</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
         
-        <a href="/2023/10/21/ctf/RCE%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" class="next">
-            <div>
-                <div class="text">
-                    <p class="label">Next</p>
-                    <h3 class="title">RCE思路总结</h3>
-                </div>
-            </div>
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
         </a>
-        
-        
-        <a href="/2023/10/21/ctf/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" class="prev">
-            <div>
-                <div class="text">
-                    <p class="label">Previous</p>
-                    <h3 class="title">文件上传思路总结</>
-                </div>
-            </div>
-        </a>
-        
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
     </div>
-
-    
-        
-        
-    
-</article>
-
-        <footer>
-    <div class="inner">
-        <div class="links">
-            
-            <div class="group">
-                <h2 class="title">Blog</h2>
-                
-                <a href="/" class="item">Blog</a>
-                
-                <a href="/archives" class="item">Archives</a>
-                
-                <a href="/tags" class="item">Tags</a>
-                
-                <a href="/categories" class="item">Categories</a>
-                
-                <a href="/search" class="item">Search</a>
-                
-                <a href="/friends" class="item">Friends</a>
-                
-                <a href="/projects" class="item">Projects</a>
-                
-                <a href="/resume" class="item">Resume</a>
-                
-                <a href="/about" class="item">About</a>
-                
-                <a href="/atom.xml" class="item">RSS</a>
-                
-            </div>
-            
-            <div class="group">
-                <h2 class="title">Projects</h2>
-                
-                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
-                
-                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
-                
-                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
-                
-                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
-                
-            </div>
-            
-            <div class="group">
-                <h2 class="title">Me</h2>
-                
-                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom" class="item">GitHub</a>
-                
-                <a target="_blank" rel="noopener" href="https://codepen.io/mrwillcom" class="item">CodePen</a>
-                
-                <a target="_blank" rel="noopener" href="https://www.patreon.com/MrWillCom" class="item">Patreon</a>
-                
-                <a target="_blank" rel="noopener" href="https://noc.social/@MrWillCom" class="item">Mastodon</a>
-                
-                <a target="_blank" rel="noopener" href="https://discord.gg/UKuFDjcfY8" class="item">Discord</a>
-                
-                <a href="mailto:mr.will.com@outlook.com" class="item">Email</a>
-                
-            </div>
-            
-        </div>
-        <span>&copy; 2023 za0y0u<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
-        
-        
-            <br>
-            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
-                <label>
-                    <input type="radio" value="light">
-                    <span>Light</span>
-                </label>
-                <label>
-                    <input type="radio" value="dark">
-                    <span>Dark</span>
-                </label>
-                <label>
-                    <input type="radio" value="auto">
-                    <span>Auto</span>
-                </label>
-            </div>
-        
-    </div>
-</footer>
+  </aside>
+  <div id="sidebar-dimmer"></div>
 
 
-        
-<script src="/js/main.js"></script>
+      </div>
+    </main>
 
-        
-        
+    <footer class="footer">
+      <div class="footer-inner">
         
 
         
-        <script src="https://unpkg.com/scrollreveal"></script>
-        <script>
-            window.addEventListener('load', () => {
-                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
-                ScrollReveal().reveal('.post-list-item .cover-img img')
-                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
-            })
-        </script>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">za0y0u</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
         
-    </body>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
 </html>
